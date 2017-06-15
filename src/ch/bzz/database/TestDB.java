@@ -2,6 +2,7 @@ package ch.bzz.database;
 
 import org.hibernate.Session;
 
+import ch.bzz.beans.Kunde;
 import ch.bzz.beans.Mitarbeiter;
 import ch.bzz.beans.User;
 
@@ -14,9 +15,10 @@ public class TestDB {
  
         User u = session.get(User.class, 1);
         
-        System.out.println(u.getUserId() + " " + u.getUsername() + " " + (u instanceof Mitarbeiter));
+        System.out.println(u.getUserId() + " " + u.getUsername() + " " + (u instanceof Mitarbeiter) + " " + (u instanceof Kunde));
         
         session.close();
+        System.exit(0);
 	}
 	
 }

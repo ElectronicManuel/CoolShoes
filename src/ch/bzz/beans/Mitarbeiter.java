@@ -2,22 +2,14 @@ package ch.bzz.beans;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
+@PrimaryKeyJoinColumn(name="MID", referencedColumnName="U_ID")
 @Table(name = "Mitarbeiter")
-@PrimaryKeyJoinColumn(name="M_U_ID", referencedColumnName="U_ID")
 public class Mitarbeiter extends User {
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name = "MID")
-	private int id;
-	
 	@Column(name = "MAVorname")
 	private String vorname;
 	
@@ -30,14 +22,6 @@ public class Mitarbeiter extends User {
 	@Override
 	public String toString() {
 		return getVorname() + " " + getNachname();
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getVorname() {
