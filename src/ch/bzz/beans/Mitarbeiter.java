@@ -5,9 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
-@Entity(name = "Mitarbeiter")
-public class Mitarbeiter {
+@Entity
+@Table(name = "Mitarbeiter")
+@PrimaryKeyJoinColumn(name="M_U_ID", referencedColumnName="U_ID")
+public class Mitarbeiter extends User {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -21,6 +25,11 @@ public class Mitarbeiter {
 	private String nachname;
 	
 	public Mitarbeiter() {
+	}
+	
+	@Override
+	public String toString() {
+		return getVorname() + " " + getNachname();
 	}
 
 	public int getId() {

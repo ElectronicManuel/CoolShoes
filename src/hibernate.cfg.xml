@@ -19,6 +19,7 @@
     <property name="connection.pool_size">1</property>
     <property name="current_session_context_class">thread</property>
  
+     <mapping class="ch.bzz.beans.User" />
      <mapping class="ch.bzz.beans.Kunde" />
      <mapping class="ch.bzz.beans.Mitarbeiter" />
      <mapping class="ch.bzz.beans.BestellStatus" />

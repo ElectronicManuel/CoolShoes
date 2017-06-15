@@ -5,9 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
-@Entity(name="Kunde")
-public class Kunde {
+@Entity
+@Table(name="Kunde")
+@PrimaryKeyJoinColumn(name="K_U_ID", referencedColumnName="U_ID")
+public class Kunde extends User {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

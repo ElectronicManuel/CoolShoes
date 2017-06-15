@@ -1,12 +1,9 @@
 package ch.bzz.database;
 
-import java.util.List;
-
-import org.hibernate.Query;
 import org.hibernate.Session;
 
-import ch.bzz.beans.Bestellung;
-import ch.bzz.beans.Kunde;
+import ch.bzz.beans.Mitarbeiter;
+import ch.bzz.beans.User;
 
 public class TestDB {
 
@@ -15,16 +12,11 @@ public class TestDB {
 		  
         session.beginTransaction();
  
+        User u = session.get(User.class, 1);
         
+        System.out.println(u.getUserId() + " " + u.getUsername() + " " + (u instanceof Mitarbeiter));
         
-        Query q = session.createQuery("From Bestellungen");
-        
-        List<Bestellung> resultList = q.list();
-        
-        System.out.println("num of bestellungen:" + resultList.size());
-        for (Bestellung next : resultList) {
-            System.out.println("next bestellung: " + " " + next.getId() + " " + next.getKunde().getVorname() + " " + next.getBestellStatus().getStatus() + " " + next.getMitarbeiter().getVorname());
-        }
+        session.close();
 	}
 	
 }
