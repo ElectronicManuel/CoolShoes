@@ -21,6 +21,8 @@ public class MainController {
 	private MainGui mainGui;
 	
 	private MainController() {
+		System.out.println("MAIN CTRL INIT");
+		
 		initControllers();
 		
 		mainGui = new MainGui();
@@ -32,6 +34,10 @@ public class MainController {
 	
 	public void popup(String title, String msg, int messageType) {
 		JOptionPane.showMessageDialog(getMainGui(), msg, title, messageType);
+	}
+	
+	public void error(String message) {
+		popup("Fehler", message, JOptionPane.ERROR_MESSAGE);
 	}
 
 	public LoginController getLoginCtrl() {

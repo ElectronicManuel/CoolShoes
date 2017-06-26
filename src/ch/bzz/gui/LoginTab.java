@@ -11,9 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
-import javax.swing.JRootPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 
 import ch.bzz.controller.MainController;
 
@@ -67,7 +65,6 @@ public class LoginTab extends JPanel {
 		loading.setIndeterminate(true);
 		add(loading, c);
 		loading.setVisible(false);
-		
 	}
 	
 	private void initListeners() {
@@ -100,5 +97,5 @@ public class LoginTab extends JPanel {
 	public JButton getLoginButton() {
 		return loginButton;
 	}
-
+	
 }

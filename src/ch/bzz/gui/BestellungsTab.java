@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -44,7 +45,13 @@ public class BestellungsTab extends JPanel {
 	
 	private void initComponents() {
 		bestellungsListe = new JList<Bestellung>();
-		bestellungsListe.setListData(BestellungsDAO.getBestellungenByUser(MainController.getInstance().getLoginCtrl().getUser()).toArray(new Bestellung[]{}));
+		Bestellung[] listData = new Bestellung[]{};
+		try {
+			listData = BestellungsDAO.getBestellungenByUser(MainController.getInstance().getLoginCtrl().getUser()).toArray(new Bestellung[]{});
+		} catch(Exception ex) {
+			MainController.getInstance().error("Ein Fehler ist aufgetreten");
+		}
+		bestellungsListe.setListData(listData);
 		bestellungsListe.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		bestellungsListe.addListSelectionListener(new ListSelectionListener() {
@@ -89,7 +96,11 @@ public class BestellungsTab extends JPanel {
 						public void run() {
 							bestellungsListe.getSelectedValue().getBestellStatus().setStatus(statusEdit.getText());
 							
-							BestellungsDAO.setStatus(bestellungsListe.getSelectedValue(), statusEdit.getText());
+							try {
+								BestellungsDAO.save(bestellungsListe.getSelectedValue());
+							} catch(Exception ex) {
+								MainController.getInstance().error("Ein Fehler ist aufgetreten");
+							}
 							saveButton.setEnabled(true);
 						}
 					}).start();

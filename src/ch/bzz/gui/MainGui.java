@@ -1,7 +1,5 @@
 package ch.bzz.gui;
 
-import java.awt.Dimension;
-
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
@@ -14,6 +12,8 @@ public class MainGui extends JFrame {
 	private BestellungsTab bestellungsTab;
 
 	public MainGui() {
+		System.out.println("MAIN GUI INIT");
+		
 		initSettings();
 		initComponents();
 		
@@ -38,6 +38,8 @@ public class MainGui extends JFrame {
 		
 		tabs.add("Login", loginTab);
 		add(tabs);
+		
+		getRootPane().setDefaultButton(loginTab.getLoginButton());
 	}
 	
 	public void recalculateSize() {
