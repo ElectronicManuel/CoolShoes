@@ -10,7 +10,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JProgressBar;
+import javax.swing.JRootPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import ch.bzz.controller.MainController;
 
@@ -19,7 +22,7 @@ public class LoginTab extends JPanel {
 	private JTextField username;
 	private JPasswordField password;
 	private JButton loginButton;
-	private JLabel message;
+	private JProgressBar loading;
 	
 	public LoginTab() {
 		initSettings();
@@ -58,10 +61,13 @@ public class LoginTab extends JPanel {
 		add(loginButton, c);
 		c.gridy++;
 		c.gridx = 0;
-		c.gridwidth = 2;
+		c.gridwidth = 4;
 		
-		message = new JLabel(" ");
-		add(message, c);
+		loading = new JProgressBar();
+		loading.setIndeterminate(true);
+		add(loading, c);
+		loading.setVisible(false);
+		
 	}
 	
 	private void initListeners() {
@@ -75,18 +81,20 @@ public class LoginTab extends JPanel {
 					
 					public void run() {
 						MainController.getInstance().getLoginCtrl().login(name, pw);
+						MainController.getInstance().getMainGui().recalculateSize();
 					}
 				}).start();
 				
 				loginButton.setEnabled(false);
-				setMessage("Laden ...");
+				load(true);
+				MainController.getInstance().getMainGui().recalculateSize();
 			}
 			
 		});
 	}
 	
-	public void setMessage(String msg) {
-		message.setText(msg);
+	public void load(boolean toLoad) {
+		loading.setVisible(toLoad);
 	}
 
 	public JButton getLoginButton() {

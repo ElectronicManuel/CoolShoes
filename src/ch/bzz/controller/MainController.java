@@ -1,5 +1,7 @@
 package ch.bzz.controller;
 
+import javax.swing.JOptionPane;
+
 import ch.bzz.gui.BestellungsTab;
 import ch.bzz.gui.LoginTab;
 import ch.bzz.gui.MainGui;
@@ -7,7 +9,7 @@ import ch.bzz.gui.MainGui;
 public class MainController {
 	
 	// Singleton
-	private static MainController instance;
+	private final static MainController instance = new MainController();
 	public static MainController getInstance() {
 		return instance;
 	}
@@ -18,9 +20,7 @@ public class MainController {
 	// Gui Classes
 	private MainGui mainGui;
 	
-	public MainController() {
-		instance = this;
-		
+	private MainController() {
 		initControllers();
 		
 		mainGui = new MainGui();
@@ -28,6 +28,10 @@ public class MainController {
 	
 	private void initControllers() {
 		loginCtrl = new LoginController();
+	}
+	
+	public void popup(String title, String msg, int messageType) {
+		JOptionPane.showMessageDialog(getMainGui(), msg, title, messageType);
 	}
 
 	public LoginController getLoginCtrl() {
@@ -39,7 +43,6 @@ public class MainController {
 	}
 
 	public static void main(String[] args) {
-		new MainController();
 	}
 
 	public void setLoggedIn(boolean loggedIn) {

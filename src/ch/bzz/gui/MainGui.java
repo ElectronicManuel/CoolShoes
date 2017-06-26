@@ -1,5 +1,7 @@
 package ch.bzz.gui;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
@@ -15,7 +17,7 @@ public class MainGui extends JFrame {
 		initSettings();
 		initComponents();
 		
-		pack();
+		recalculateSize();
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
@@ -36,6 +38,13 @@ public class MainGui extends JFrame {
 		
 		tabs.add("Login", loginTab);
 		add(tabs);
+	}
+	
+	public void recalculateSize() {
+		revalidate();
+		pack();
+		repaint();
+		setMinimumSize(getSize());
 	}
 	
 	public void removeTabWithTitle(String tabTitleToRemove) {
