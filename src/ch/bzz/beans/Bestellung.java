@@ -33,6 +33,11 @@ public class Bestellung {
 	public Bestellung() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	@Override
+	public String toString() {
+		return getId() + "";
+	}
 
 	public int getId() {
 		return id;

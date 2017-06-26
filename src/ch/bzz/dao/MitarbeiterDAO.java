@@ -19,6 +19,8 @@ public class MitarbeiterDAO {
         Query q = session.createQuery("From Mitarbeiter");
         mitarbeiter = q.getResultList();
 		
+        
+        session.close();
 		return mitarbeiter;
 	}
 

@@ -1,10 +1,10 @@
 package ch.bzz.database;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 
 import ch.bzz.beans.Kunde;
 import ch.bzz.beans.Mitarbeiter;
-import ch.bzz.beans.User;
 
 public class TestDB {
 
@@ -13,9 +13,10 @@ public class TestDB {
 		  
         session.beginTransaction();
  
-        User u = session.get(User.class, 1);
+        Query q = session.createQuery("From Bestellung");
         
-        System.out.println(u.getUserId() + " " + u.getUsername() + " " + (u instanceof Mitarbeiter) + " " + (u instanceof Kunde));
+        System.out.println(q.list().size());
+        
         
         session.close();
         System.exit(0);

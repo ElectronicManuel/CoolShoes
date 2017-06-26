@@ -4,13 +4,12 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 
-import ch.bzz.gui.login.LoginTab;
-
 public class MainGui extends JFrame {
 	
 	private JTabbedPane tabs;
 	
 	private LoginTab loginTab;
+	private BestellungsTab bestellungsTab;
 
 	public MainGui() {
 		initSettings();
@@ -37,6 +36,36 @@ public class MainGui extends JFrame {
 		
 		tabs.add("Login", loginTab);
 		add(tabs);
+	}
+	
+	public void removeTabWithTitle(String tabTitleToRemove) {
+	    for (int i = 0; i < tabs.getTabCount(); i++) {
+	        String tabTitle = tabs.getTitleAt(i);
+	        if (tabTitle.equals(tabTitleToRemove)) {
+	        	tabs.remove(i);
+	            break;
+	        }
+	    }
+	}
+	
+	public JTabbedPane getTabs() {
+		return tabs;
+	}
+
+	public LoginTab getLoginTab() {
+		return loginTab;
+	}
+
+	public void setLoginTab(LoginTab loginTab) {
+		this.loginTab = loginTab;
+	}
+
+	public BestellungsTab getBestellungsTab() {
+		return bestellungsTab;
+	}
+
+	public void setBestellungsTab(BestellungsTab bestellungsTab) {
+		this.bestellungsTab = bestellungsTab;
 	}
 
 	public static void main(String[] args) {

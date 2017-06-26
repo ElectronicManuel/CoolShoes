@@ -1,5 +1,7 @@
 package ch.bzz.controller;
 
+import ch.bzz.gui.BestellungsTab;
+import ch.bzz.gui.LoginTab;
 import ch.bzz.gui.MainGui;
 
 public class MainController {
@@ -19,8 +21,9 @@ public class MainController {
 	public MainController() {
 		instance = this;
 		
-		mainGui = new MainGui();
 		initControllers();
+		
+		mainGui = new MainGui();
 	}
 	
 	private void initControllers() {
@@ -35,4 +38,23 @@ public class MainController {
 		return mainGui;
 	}
 
+	public static void main(String[] args) {
+		new MainController();
+	}
+
+	public void setLoggedIn(boolean loggedIn) {
+		if(loggedIn) {
+			mainGui.setBestellungsTab(new BestellungsTab());
+			mainGui.setLoginTab(null);
+			mainGui.removeTabWithTitle("Login");
+			mainGui.getTabs().add("Bestellungen", mainGui.getBestellungsTab());
+		} else {
+			mainGui.setBestellungsTab(null);
+			mainGui.setLoginTab(new LoginTab());
+			mainGui.removeTabWithTitle("Bestellungen");
+			mainGui.getTabs().add("Login", mainGui.getLoginTab());
+		}
+		mainGui.pack();
+	}
+	
 }

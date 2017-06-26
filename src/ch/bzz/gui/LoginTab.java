@@ -1,4 +1,4 @@
-package ch.bzz.gui.login;
+package ch.bzz.gui;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -19,6 +19,7 @@ public class LoginTab extends JPanel {
 	private JTextField username;
 	private JPasswordField password;
 	private JButton loginButton;
+	private JLabel message;
 	
 	public LoginTab() {
 		initSettings();
@@ -55,19 +56,41 @@ public class LoginTab extends JPanel {
 		
 		loginButton = new JButton("Login");
 		add(loginButton, c);
+		c.gridy++;
+		c.gridx = 0;
+		c.gridwidth = 2;
+		
+		message = new JLabel(" ");
+		add(message, c);
 	}
 	
 	private void initListeners() {
 		loginButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				String name = username.getText();
-				String pw = password.getPassword().toString();
+				final String name = username.getText();
+				final String pw = password.getText();
 				
-				MainController.getInstance().getLoginCtrl().login(name, pw);
+				new Thread(new Runnable() {
+					
+					public void run() {
+						MainController.getInstance().getLoginCtrl().login(name, pw);
+					}
+				}).start();
+				
+				loginButton.setEnabled(false);
+				setMessage("Laden ...");
 			}
 			
 		});
+	}
+	
+	public void setMessage(String msg) {
+		message.setText(msg);
+	}
+
+	public JButton getLoginButton() {
+		return loginButton;
 	}
 
 }
