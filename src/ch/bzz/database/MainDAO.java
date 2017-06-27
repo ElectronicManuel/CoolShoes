@@ -5,8 +5,7 @@ import org.hibernate.Transaction;
 
 public class MainDAO {
 	
-	@SuppressWarnings("unchecked")
-	public static <T> T executeAction(DBAction action, Class<T> type) throws Exception {
+	public static <T> T executeAction(DBAction<T> action) throws Exception {
 		T toReturn = null;
 		
 		Exception toThrow = null;
@@ -16,11 +15,7 @@ public class MainDAO {
 		try {
 			trns = session.beginTransaction();
 			
-			if(type != null) {
-				toReturn = (T) action.run(session);
-			} else {
-				action.run(session);
-			}
+			toReturn = action.run(session);
 			
 			trns.commit();
 		}

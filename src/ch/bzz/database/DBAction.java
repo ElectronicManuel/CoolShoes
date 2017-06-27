@@ -2,8 +2,8 @@ package ch.bzz.database;
 
 import org.hibernate.Session;
 
-public abstract class DBAction {
+public abstract class DBAction<T> {
 	
-	public abstract Object run(Session s);
+	public abstract T run(Session s) throws Exception;
 
 }

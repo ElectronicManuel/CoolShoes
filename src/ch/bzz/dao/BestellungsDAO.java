@@ -16,11 +16,10 @@ import ch.bzz.database.MainDAO;
 public class BestellungsDAO {
 	
 	public static List<Bestellung> getBestellungenByUser(final User user) throws Exception {
-		@SuppressWarnings("unchecked")
-		List<Bestellung> bestellungen = (List<Bestellung>) MainDAO.executeAction(new DBAction() {
+		List<Bestellung> bestellungen = MainDAO.<List<Bestellung>>executeAction(new DBAction<List<Bestellung>>() {
 			
 			@Override
-			public Object run(Session s) {
+			public List<Bestellung> run(Session s) {
 				String hql = "";
 				
 				if(user instanceof Mitarbeiter) {
@@ -29,6 +28,7 @@ public class BestellungsDAO {
 					hql = "From Bestellung where kunde.userId=" + user.getUserId();
 				}
 				
+				@SuppressWarnings("unchecked")
 				TypedQuery<Bestellung> q = s.createQuery(hql);
 				
 				List<Bestellung> bestellungen = q.getResultList();
@@ -36,13 +36,13 @@ public class BestellungsDAO {
 				return bestellungen;
 			}
 			
-		}, List.class);
+		});
 		
 		return bestellungen;
 	}
 	
 	public static void save(final Bestellung bestellung) throws Exception {
-		MainDAO.executeAction(new DBAction() {
+		MainDAO.executeAction(new DBAction<Object>() {
 			
 			@Override
 			public Object run(Session s) {
@@ -53,7 +53,7 @@ public class BestellungsDAO {
 				return null;
 			}
 			
-		}, null);
+		});
 	}
 	
 }

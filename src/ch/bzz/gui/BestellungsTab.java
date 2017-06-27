@@ -19,7 +19,6 @@ import ch.bzz.beans.Kunde;
 import ch.bzz.beans.Mitarbeiter;
 import ch.bzz.controller.MainController;
 import ch.bzz.dao.BestellungsDAO;
-import ch.bzz.dao.MitarbeiterDAO;
 
 public class BestellungsTab extends JPanel {
 	
@@ -37,6 +36,8 @@ public class BestellungsTab extends JPanel {
 	public BestellungsTab() {
 		initSettings();
 		initComponents();
+		
+		updateDetails();
 	}
 
 	private void initSettings() {
@@ -53,6 +54,8 @@ public class BestellungsTab extends JPanel {
 		}
 		bestellungsListe.setListData(listData);
 		bestellungsListe.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
+		if(listData.length > 0) bestellungsListe.setSelectedIndex(0);
 		
 		bestellungsListe.addListSelectionListener(new ListSelectionListener() {
 			
@@ -94,10 +97,10 @@ public class BestellungsTab extends JPanel {
 					new Thread(new Runnable() {
 						
 						public void run() {
-							bestellungsListe.getSelectedValue().getBestellStatus().setStatus(statusEdit.getText());
-							
 							try {
+								bestellungsListe.getSelectedValue().getBestellStatus().setStatus(statusEdit.getText());
 								BestellungsDAO.save(bestellungsListe.getSelectedValue());
+								MainController.getInstance().popup("Gespeichert", "Änderungen wurden erfolgreich gespeichert", JOptionPane.INFORMATION_MESSAGE);
 							} catch(Exception ex) {
 								MainController.getInstance().error("Ein Fehler ist aufgetreten");
 							}

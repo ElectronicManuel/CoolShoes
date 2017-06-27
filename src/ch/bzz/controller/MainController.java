@@ -63,7 +63,7 @@ public class MainController {
 			mainGui.removeTabWithTitle("Bestellungen");
 			mainGui.getTabs().add("Login", mainGui.getLoginTab());
 		}
-		mainGui.pack();
+		mainGui.recalculateSize();
 	}
 	
 }
