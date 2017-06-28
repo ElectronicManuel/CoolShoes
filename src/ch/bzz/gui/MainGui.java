@@ -1,16 +1,24 @@
 package ch.bzz.gui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class MainGui extends JFrame {
 	
 	private JTabbedPane tabs;
 	
-	private LoginTab loginTab;
-	private BestellungsTab bestellungsTab;
-
+	private List<String> currentTabs;
+	
+	private Map<String, CoolTab> tabList;
+	
 	public MainGui() {
 		System.out.println("MAIN GUI INIT");
 		
@@ -20,6 +28,8 @@ public class MainGui extends JFrame {
 		recalculateSize();
 		setLocationRelativeTo(null);
 		setVisible(true);
+		
+		activateTab("Login");
 	}
 
 	private void initSettings() {
@@ -33,13 +43,23 @@ public class MainGui extends JFrame {
 	}
 	
 	private void initComponents() {
+		currentTabs = new ArrayList<String>();
+		tabList = new HashMap<String, CoolTab>();
 		tabs = new JTabbedPane();
-		loginTab = new LoginTab();
 		
-		tabs.add("Login", loginTab);
+		tabs.addChangeListener(new ChangeListener() {
+			
+			public void stateChanged(ChangeEvent e) {
+				recalculateSize();
+			}
+		});
+		
+		// initialisiere tabs
+		tabList.put("Login", new LoginTab());
+		tabList.put("Bestellen", new BestellungsTab());
+		
+		
 		add(tabs);
-		
-		getRootPane().setDefaultButton(loginTab.getLoginButton());
 	}
 	
 	public void recalculateSize() {
@@ -47,6 +67,46 @@ public class MainGui extends JFrame {
 		pack();
 		repaint();
 		setMinimumSize(getSize());
+	}
+	
+	public void activateTab(String name) {
+		if(tabList.containsKey(name)) {
+			if(!currentTabs.contains(name)) {
+				CoolTab toActivate = tabList.get(name);
+				toActivate.activate();
+				tabs.add(name, toActivate);
+				currentTabs.add(name);
+				
+				// Default Werte
+				if(toActivate.getDefaultButton() != null) getRootPane().setDefaultButton(toActivate.getDefaultButton());
+				if(toActivate.getDefaultFocus() != null) toActivate.getDefaultFocus().requestFocusInWindow();
+				
+				recalculateSize();
+			}
+			else {
+				System.err.println("Tab '" + name + "' ist bereits aktiv");
+			}
+		} else {
+			System.err.println("Tab mit Namen '" + name + "' konnte nicht gefunden werden");
+		}
+	}
+	
+	public void deactivateTab(String name) {
+		if(tabList.containsKey(name)) {
+			if(currentTabs.contains(name)) {
+				CoolTab toDeactivate = tabList.get(name);
+				toDeactivate.activate();
+				removeTabWithTitle(name);
+				currentTabs.remove(name);
+				
+				recalculateSize();
+			}
+			else {
+				System.err.println("Tab '" + name + "' ist nicht aktiv");
+			}
+		} else {
+			System.err.println("Tab mit Namen '" + name + "' konnte nicht gefunden werden");
+		}
 	}
 	
 	public void removeTabWithTitle(String tabTitleToRemove) {
@@ -58,29 +118,5 @@ public class MainGui extends JFrame {
 	        }
 	    }
 	}
-	
-	public JTabbedPane getTabs() {
-		return tabs;
-	}
 
-	public LoginTab getLoginTab() {
-		return loginTab;
-	}
-
-	public void setLoginTab(LoginTab loginTab) {
-		this.loginTab = loginTab;
-	}
-
-	public BestellungsTab getBestellungsTab() {
-		return bestellungsTab;
-	}
-
-	public void setBestellungsTab(BestellungsTab bestellungsTab) {
-		this.bestellungsTab = bestellungsTab;
-	}
-
-	public static void main(String[] args) {
-		new MainGui();
-	}
-	
 }

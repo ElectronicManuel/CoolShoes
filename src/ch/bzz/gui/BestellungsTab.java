@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -19,19 +20,9 @@ import ch.bzz.beans.Kunde;
 import ch.bzz.beans.Mitarbeiter;
 import ch.bzz.controller.MainController;
 import ch.bzz.dao.BestellungsDAO;
+import ch.bzz.util.GUIUtil;
 
-public class BestellungsTab extends JPanel {
-	
-	private JList<Bestellung> bestellungsListe;
-	
-	private JLabel kundenAnzeige;
-	private JLabel mitarbeiterAnzeige;
-	private JLabel bestellStatus;
-	
-	private JTextField statusEdit;
-	
-	private JButton saveButton;
-	private JButton logoutButton;
+public class BestellungsTab extends CoolTab {
 	
 	public BestellungsTab() {
 		initSettings();
@@ -45,8 +36,10 @@ public class BestellungsTab extends JPanel {
 	}
 	
 	private void initComponents() {
-		bestellungsListe = new JList<Bestellung>();
+		JList<Bestellung> bestellungsListe = new JList<Bestellung>();
 		Bestellung[] listData = new Bestellung[]{};
+		
+		// Lese Bestellungen aus der Datenbank aus
 		try {
 			listData = BestellungsDAO.getBestellungenByUser(MainController.getInstance().getLoginCtrl().getUser()).toArray(new Bestellung[]{});
 		} catch(Exception ex) {
@@ -62,82 +55,95 @@ public class BestellungsTab extends JPanel {
 			public void valueChanged(ListSelectionEvent e) {
 				updateDetails();
 			}
+			
 		});
 		
+		addComp("orderList", bestellungsListe);
 		add(bestellungsListe, BorderLayout.WEST);
 		
-		logoutButton = new JButton("Abmelden");
-		JPanel wrapper = new JPanel();
-		wrapper.add(logoutButton);
-		logoutButton.addActionListener(new ActionListener() {
+		addComp("logoutButton", new JButton("Abmelden"));
+		
+		get("logoutButton", JButton.class).addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				MainController.getInstance().setLoggedIn(false);
 			}
+			
 		});
-		add(wrapper, BorderLayout.SOUTH);
+		add(GUIUtil.wrap(get("logoutButton")), BorderLayout.SOUTH);
+		
 		JPanel details = new JPanel();
 		
-		kundenAnzeige = new JLabel("");
-		mitarbeiterAnzeige = new JLabel("");
-		details.add(kundenAnzeige);
-		details.add(mitarbeiterAnzeige);
+		addComp("kundenLabel", new JLabel(""));
+		addComp("mitarbeiterLabel", new JLabel(""));
+		details.add(get("kundenLabel"));
+		details.add(get("mitarbeiterLabel"));
 		
 		if(MainController.getInstance().getLoginCtrl().getUser() instanceof Kunde) {
-			bestellStatus = new JLabel("");
-			details.add(bestellStatus);
+			addComp("statusLabel", new JLabel(""));
+			details.add(get("statusLabel"));
 		} else if(MainController.getInstance().getLoginCtrl().getUser() instanceof Mitarbeiter) {
-			statusEdit = new JTextField(30);
-			details.add(statusEdit);
-			statusEdit.setVisible(true);
-			saveButton = new JButton("Änderungen speichern");
-			saveButton.addActionListener(new ActionListener() {
+			addComp("statusInput", new JTextField(30));
+			details.add(get("statusInput"));
+			addComp("saveButton", new JButton("Änderungen speichern"));
+			get("saveButton", JButton.class).addActionListener(new ActionListener() {
 				
 				public void actionPerformed(ActionEvent e) {
 					new Thread(new Runnable() {
 						
 						public void run() {
 							try {
-								bestellungsListe.getSelectedValue().getBestellStatus().setStatus(statusEdit.getText());
-								BestellungsDAO.save(bestellungsListe.getSelectedValue());
+								((Bestellung)get("orderList", JList.class).getSelectedValue()).getBestellStatus().setStatus(get("statusInput", JTextField.class).getText());
+								BestellungsDAO.save(((Bestellung)get("orderList", JList.class).getSelectedValue()));
 								MainController.getInstance().popup("Gespeichert", "Änderungen wurden erfolgreich gespeichert", JOptionPane.INFORMATION_MESSAGE);
 							} catch(Exception ex) {
 								MainController.getInstance().error("Ein Fehler ist aufgetreten");
 							}
-							saveButton.setEnabled(true);
+							get("saveButton").setEnabled(true);
 						}
 					}).start();
 					
-					saveButton.setEnabled(false);
+					get("saveButton").setEnabled(false);
 				}
 			});
-			add(saveButton, BorderLayout.EAST);
+			add(get("saveButton"), BorderLayout.EAST);
 		}
 		
+		addComp("detailPanel", details);
 		add(details, BorderLayout.CENTER);
 	}
 	
 	private void updateDetails() {
-		Bestellung current = bestellungsListe.getSelectedValue();
+		Bestellung current = ((Bestellung)get("orderList", JList.class).getSelectedValue());
 		if(current != null) {
-			kundenAnzeige.setText(current.getKunde().getEmail());
-			mitarbeiterAnzeige.setText(current.getMitarbeiter().getVorname() + " " + current.getMitarbeiter().getNachname());
+			get("kundenLabel", JLabel.class).setText(current.getKunde().getEmail());
+			get("mitarbeiterLabel", JLabel.class).setText(current.getMitarbeiter().getVorname() + " " + current.getMitarbeiter().getNachname());
 			
 			if(MainController.getInstance().getLoginCtrl().getUser() instanceof Kunde) {
-				bestellStatus.setText(current.getBestellStatus().getStatus());
+				get("statusLabel", JLabel.class).setText(current.getBestellStatus().getStatus());
 			} else if(MainController.getInstance().getLoginCtrl().getUser() instanceof Mitarbeiter) {
-				statusEdit.setText(current.getBestellStatus().getStatus());
-				statusEdit.setVisible(true);
+				get("statusInput", JTextField.class).setText(current.getBestellStatus().getStatus());
+				get("statusInput", JTextField.class).setVisible(true);
 			}
 			
 		} else {
-			kundenAnzeige.setText("");
-			mitarbeiterAnzeige.setText("");
-			bestellStatus.setText("");
-			statusEdit.setVisible(false);
+			get("kundenLabel", JLabel.class).setText("");
+			get("mitarbeiterLabel", JLabel.class).setText("");
+			if(has("statusLabel")) get("statusLabel", JLabel.class).setText("");
+			if(has("statusInput")) get("statusInput").setVisible(false);
 		}
 		
 		repaint();
+	}
+
+	@Override
+	public JButton getDefaultButton() {
+		return null;
+	}
+
+	@Override
+	public JComponent getDefaultFocus() {
+		return null;
 	}
 	
 }

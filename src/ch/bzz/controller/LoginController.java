@@ -28,16 +28,12 @@ public class LoginController {
 				MainController.getInstance().setLoggedIn(true);
 			} else {
 				// Kein Benutzer mit diesem Username + Passwort gefunden
-				MainController.getInstance().getMainGui().getLoginTab().load(false);
 				MainController.getInstance().popup("Login fehlgeschlagen", "Ihr Benutzername oder Passwort ist inkorrekt", JOptionPane.ERROR_MESSAGE);
-				MainController.getInstance().getMainGui().getLoginTab().getLoginButton().setEnabled(true);
 			}
 		} catch(Exception ex) {
 			System.out.println("Error caught");
 			ex.printStackTrace();
-			MainController.getInstance().getMainGui().getLoginTab().load(false);
 			MainController.getInstance().popup("Login fehlgeschlagen", "Ein Fehler ist aufgetreten", JOptionPane.ERROR_MESSAGE);
-			MainController.getInstance().getMainGui().getLoginTab().getLoginButton().setEnabled(true);
 		}
 	}
 

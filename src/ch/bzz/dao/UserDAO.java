@@ -1,7 +1,5 @@
 package ch.bzz.dao;
 
-import java.util.logging.Logger;
-
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
@@ -9,7 +7,6 @@ import org.hibernate.Session;
 
 import ch.bzz.beans.User;
 import ch.bzz.database.DBAction;
-import ch.bzz.database.HibernateUtil;
 import ch.bzz.database.MainDAO;
 
 public class UserDAO {

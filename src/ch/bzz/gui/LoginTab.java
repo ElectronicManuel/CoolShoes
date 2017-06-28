@@ -7,20 +7,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
 import ch.bzz.controller.MainController;
 
-public class LoginTab extends JPanel {
-	
-	private JTextField username;
-	private JPasswordField password;
-	private JButton loginButton;
-	private JProgressBar loading;
+public class LoginTab extends CoolTab {
 	
 	public LoginTab() {
 		initSettings();
@@ -39,50 +34,56 @@ public class LoginTab extends JPanel {
 		c.gridy = 0;
 		c.insets = new Insets(5, 5, 5, 5);
 		
-		add(new JLabel("Benutzername"), c);
+		addComp("usernameLabel", new JLabel("Benutzername"));
+		
+		add(get("usernameLabel"), c);
 		c.gridx = 1;
 		
-		username = new JTextField(40);
-		add(username, c);
+		addComp("usernameInput", new JTextField(40));
+		add(get("usernameInput"), c);
 		c.gridy++;
 		c.gridx = 0;
 		
-		add(new JLabel("Passwort"), c);
+		addComp("passwordLabel", new JLabel("Passwort"));
+		add(get("passwordLabel"), c);
 		c.gridx = 1;
 		
-		password = new JPasswordField(40);
-		add(password, c);
+		addComp("passwordInput", new JPasswordField(40));
+		add(get("passwordInput"), c);
 		c.gridy++;
 		c.gridx = 0;
-		
-		loginButton = new JButton("Login");
-		add(loginButton, c);
+
+		addComp("loginButton", new JButton("Anmelden"));
+		add(get("loginButton"), c);
 		c.gridy++;
 		c.gridx = 0;
 		c.gridwidth = 4;
 		
-		loading = new JProgressBar();
+		JProgressBar loading = new JProgressBar();
 		loading.setIndeterminate(true);
+		addComp("loading", new JProgressBar());
 		add(loading, c);
-		loading.setVisible(false);
 	}
 	
 	private void initListeners() {
-		loginButton.addActionListener(new ActionListener() {
+		get("loginButton", JButton.class).addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				final String name = username.getText();
-				final String pw = password.getText();
+				final String name = get("usernameInput", JTextField.class).getText();
+				final String pw = get("passwordInput", JPasswordField.class).getText();
 				
 				new Thread(new Runnable() {
 					
 					public void run() {
 						MainController.getInstance().getLoginCtrl().login(name, pw);
+						load(false);
+						get("loginButton").setEnabled(true);
+						
 						MainController.getInstance().getMainGui().recalculateSize();
 					}
 				}).start();
 				
-				loginButton.setEnabled(false);
+				get("loginButton").setEnabled(false);
 				load(true);
 				MainController.getInstance().getMainGui().recalculateSize();
 			}
@@ -91,11 +92,23 @@ public class LoginTab extends JPanel {
 	}
 	
 	public void load(boolean toLoad) {
-		loading.setVisible(toLoad);
+		get("loading").setVisible(toLoad);
 	}
 
-	public JButton getLoginButton() {
-		return loginButton;
+	@Override
+	public void activate() {
+		super.activate();
+		get("loading").setVisible(false);
+	}
+	
+	@Override
+	public JButton getDefaultButton() {
+		return get("loginButton", JButton.class);
+	}
+
+	@Override
+	public JComponent getDefaultFocus() {
+		return get("usernameInput");
 	}
 	
 }

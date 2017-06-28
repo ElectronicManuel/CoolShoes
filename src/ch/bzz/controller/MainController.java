@@ -53,15 +53,11 @@ public class MainController {
 
 	public void setLoggedIn(boolean loggedIn) {
 		if(loggedIn) {
-			mainGui.setBestellungsTab(new BestellungsTab());
-			mainGui.setLoginTab(null);
-			mainGui.removeTabWithTitle("Login");
-			mainGui.getTabs().add("Bestellungen", mainGui.getBestellungsTab());
+			mainGui.deactivateTab("Login");
+			mainGui.activateTab("Bestellen");
 		} else {
-			mainGui.setBestellungsTab(null);
-			mainGui.setLoginTab(new LoginTab());
-			mainGui.removeTabWithTitle("Bestellungen");
-			mainGui.getTabs().add("Login", mainGui.getLoginTab());
+			mainGui.deactivateTab("Bestellen");
+			mainGui.activateTab("Login");
 		}
 		mainGui.recalculateSize();
 	}
