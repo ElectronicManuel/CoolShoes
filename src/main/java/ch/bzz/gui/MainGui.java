@@ -20,8 +20,6 @@ public class MainGui extends JFrame {
 	private Map<String, CoolTab> tabList;
 	
 	public MainGui() {
-		System.out.println("MAIN GUI INIT");
-		
 		initSettings();
 		initComponents();
 		
@@ -55,8 +53,8 @@ public class MainGui extends JFrame {
 		});
 		
 		// initialisiere tabs
-		tabList.put("Login", new LoginTab());
-		tabList.put("Bestellen", new BestellungsTab());
+		addTab("Login", new LoginTab());
+		addTab("Bestellen", new BestellungsTab());
 		
 		
 		add(tabs);
@@ -67,6 +65,11 @@ public class MainGui extends JFrame {
 		pack();
 		repaint();
 		setMinimumSize(getSize());
+	}
+	
+	public void addTab(String name, CoolTab tab) {
+		tabList.put(name, tab);
+		tab.initBaseComponents();
 	}
 	
 	public void activateTab(String name) {
@@ -95,7 +98,7 @@ public class MainGui extends JFrame {
 		if(tabList.containsKey(name)) {
 			if(currentTabs.contains(name)) {
 				CoolTab toDeactivate = tabList.get(name);
-				toDeactivate.activate();
+				toDeactivate.deactivate();
 				removeTabWithTitle(name);
 				currentTabs.remove(name);
 				

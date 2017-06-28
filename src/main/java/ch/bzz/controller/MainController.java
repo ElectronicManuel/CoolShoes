@@ -21,8 +21,6 @@ public class MainController {
 	private MainGui mainGui;
 	
 	private MainController() {
-		System.out.println("MAIN CTRL INIT");
-		
 		initControllers();
 		
 		mainGui = new MainGui();
