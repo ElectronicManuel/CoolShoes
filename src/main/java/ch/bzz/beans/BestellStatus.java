@@ -30,8 +30,10 @@ public class BestellStatus {
 	@Column(name = "Lieferunggeplant")
 	private Date lieferungGeplant;
 	
+	@Column(name = "Vermerk")
+	private String vermerk;
+	
 	public BestellStatus() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public int getId() {
@@ -73,5 +75,14 @@ public class BestellStatus {
 	public void setLieferungGeplant(Date lieferungGeplant) {
 		this.lieferungGeplant = lieferungGeplant;
 	}
+
+	public String getVermerk() {
+		return vermerk;
+	}
+
+	public void setVermerk(String vermerk) {
+		this.vermerk = vermerk;
+	}
+	
 	
 }

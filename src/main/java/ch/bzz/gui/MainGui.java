@@ -1,5 +1,6 @@
 package ch.bzz.gui;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,9 @@ public class MainGui extends JFrame {
 	}
 	
 	public void recalculateSize() {
+		Dimension size = getMinimumSize();
+		setMinimumSize(new Dimension(0, 0));
+		setSize(size);
 		revalidate();
 		pack();
 		repaint();
