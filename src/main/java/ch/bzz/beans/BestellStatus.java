@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import ch.bzz.dao.BestellungsDAO;
+
 @Entity
 @Table(name = "BestellStatus")
 public class BestellStatus {
@@ -33,7 +35,17 @@ public class BestellStatus {
 	@Column(name = "Vermerk")
 	private String vermerk;
 	
+	@Column(name = "Gesetzt")
+	private Date gesetzt;
+	
+	@Column(name = "Ersetzt")
+	private Date ersetzt;
+	
 	public BestellStatus() {
+	}
+	
+	public BestellStatus(String status) {
+		this.status = status;
 	}
 
 	public int getId() {
@@ -82,6 +94,24 @@ public class BestellStatus {
 
 	public void setVermerk(String vermerk) {
 		this.vermerk = vermerk;
+	}
+
+	public Date getGesetzt() {
+		return gesetzt;
+	}
+
+	public void setGesetzt(Date gesetzt) {
+		ersetzt = new Date();
+		//BestellungsDAO.save(get);
+		this.gesetzt = gesetzt;
+	}
+
+	public Date getErsetzt() {
+		return ersetzt;
+	}
+
+	public void setErsetzt(Date ersetzt) {
+		this.ersetzt = ersetzt;
 	}
 	
 	

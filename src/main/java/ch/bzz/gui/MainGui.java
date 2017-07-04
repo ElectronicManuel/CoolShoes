@@ -125,5 +125,9 @@ public class MainGui extends JFrame {
 	        }
 	    }
 	}
-
+	
+	public <T extends CoolTab> T getTab(String name, Class<T> clazz) {
+		return clazz.cast(tabList.get(name));
+	}
+	
 }

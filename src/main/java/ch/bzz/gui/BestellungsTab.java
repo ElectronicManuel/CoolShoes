@@ -43,9 +43,7 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 		allStatus.add("Auftrag abgeholt");
 		allStatus.add("Auftrag geliefert");
 		allStatus.add("Auftrag bestellt");
-		
-		
-		
+
 		/* Bestellungsliste */
 		JList<Bestellung> orderList = new JList<Bestellung>();
 		orderList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -80,6 +78,8 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 		c.gridy++;
 		
 		// Status
+		
+		c.anchor = GridBagConstraints.NORTH;
 		details.add(new JLabel("Bestellstatus"), c);
 		c.gridx = 1;
 		JComboBox statusAuswahl = new JComboBox<>();
@@ -168,23 +168,24 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 			get("kundeInput", JTextField.class).setText(current.getKunde().getEmail());
 			get("mitarbeiterInput", JTextField.class).setText(current.getMitarbeiter().getVorname() + " " + current.getMitarbeiter().getNachname());
 			get("statusInput", JComboBox.class).setSelectedItem(current.getBestellStatus().getStatus());
+			get("vermerkInput", JTextArea.class).setText(current.getBestellStatus().getVermerk());
 		} else {
 			get("kundeInput", JTextField.class).setText("");
 			get("mitarbeiterInput", JTextField.class).setText("");
 			get("statusInput", JComboBox.class).setSelectedIndex(0);
+			get("vermerkInput", JTextArea.class).setText("");
 		}
 	}
 	
 	/*
 	 * Event Listeners
 	 */
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == get("saveButton")) {
 			if(MainController.getInstance().getLoginCtrl().getUser() instanceof Mitarbeiter) {
-				new Thread(new Runnable() {
-					
+				new Thread(new Runnable() {				
 					public void run() {
 						try {
 							((Bestellung)get("orderList", JList.class).getSelectedValue()).getBestellStatus().setStatus(get("statusInput", JComboBox.class).getSelectedItem().toString());

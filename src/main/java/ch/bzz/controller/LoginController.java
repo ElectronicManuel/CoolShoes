@@ -6,6 +6,7 @@ import ch.bzz.beans.Kunde;
 import ch.bzz.beans.Mitarbeiter;
 import ch.bzz.beans.User;
 import ch.bzz.dao.UserDAO;
+import ch.bzz.gui.MainGui;
 
 public class LoginController {
 	
@@ -15,7 +16,7 @@ public class LoginController {
 		
 	}
 
-	public void login(String username, String password) {
+	public boolean login(String username, String password) {
 		try {
 			User loggedIn = UserDAO.getUserByLogin(username, password);
 			if(loggedIn != null) {
@@ -25,7 +26,10 @@ public class LoginController {
 				} else if(loggedIn instanceof Mitarbeiter) {
 					// Der Benutzer ist Mitarbeiter
 				}
-				MainController.getInstance().setLoggedIn(true);
+				if(MainController.isGuiEnabled()) {
+					MainController.getInstance().setLoggedIn(true);
+				}
+				return true;
 			} else {
 				// Kein Benutzer mit diesem Username + Passwort gefunden
 				MainController.getInstance().popup("Login fehlgeschlagen", "Ihr Benutzername oder Passwort ist inkorrekt", JOptionPane.ERROR_MESSAGE);
@@ -34,7 +38,9 @@ public class LoginController {
 			System.out.println("Error caught");
 			ex.printStackTrace();
 			MainController.getInstance().popup("Login fehlgeschlagen", "Ein Fehler ist aufgetreten", JOptionPane.ERROR_MESSAGE);
+			
 		}
+		return false;
 	}
 
 	public User getUser() {

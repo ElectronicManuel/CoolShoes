@@ -62,5 +62,4 @@ public abstract class CoolTab extends JPanel {
 	public boolean has(String name) {
 		return get(name) != null;
 	}
-	
 }
