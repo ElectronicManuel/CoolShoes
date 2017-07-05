@@ -9,7 +9,6 @@ import ch.bzz.beans.Bestellung;
 import ch.bzz.controller.MainController;
 import ch.bzz.dao.BestellungsDAO;
 import ch.bzz.gui.BestellungsTab;
-import ch.bzz.gui.CoolTab;
 import junit.framework.TestCase;
 
 public class LoginTest extends TestCase {
@@ -28,17 +27,20 @@ public class LoginTest extends TestCase {
 	}
 	
 	@Test
-	public void testSetAuftragAufbereiten() {
+	public void testSetAuftragAufbereiten() throws Exception {
 		MainController mc = new MainController();
 		mc.initGui();
 		mc.getLoginCtrl().login("MK", "abcd");
 		
 		BestellungsTab bestellTab = mc.getMainGui().getTab("Bestellen", BestellungsTab.class);
 		
-		bestellTab.get("statusInput", JComboBox.class).setSelectedIndex(1);;
+		bestellTab.get("statusInput", JComboBox.class).setSelectedIndex(1); // Ändere Bestellstatus in der Combobox
 		
-		((Bestellung) bestellTab.get("orderList", JList.class).getSelectedValue()).getBestellStatus().setStatus(bestellTab.get("statusInput", JComboBox.class).getSelectedItem().toString());
+		Bestellung bestellung = (Bestellung) bestellTab.get("orderList", JList.class).getSelectedValue();
+		String status = bestellTab.get("statusInput", JComboBox.class).getSelectedItem().toString();
 		
-		assertEquals("Auftrag aufbereiten",((Bestellung) bestellTab.get("orderList", JList.class).getSelectedValue()).getBestellStatus().getStatus());
+		BestellungsDAO.setBestellStatus(bestellung, status);
+		
+		assertEquals("Auftrag aufbereiten", bestellung.getCurrentBestellStatus().getStatus());
 	}
 }

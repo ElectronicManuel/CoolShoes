@@ -21,13 +21,13 @@ public class LoginTab extends CoolTab {
 		get("loginButton", JButton.class).addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				final String name = get("usernameInput", JTextField.class).getText();
+				final String email = get("emailInput", JTextField.class).getText();
 				final String pw = String.valueOf(get("passwordInput", JPasswordField.class).getPassword());
 				
 				new Thread(new Runnable() {
 					
 					public void run() {
-						MainController.getInstance().getLoginCtrl().login(name, pw);
+						MainController.getInstance().getLoginCtrl().login(email, pw);
 						load(false);
 						get("loginButton").setEnabled(true);
 						
@@ -68,13 +68,13 @@ public class LoginTab extends CoolTab {
 		c.gridy = 0;
 		c.insets = new Insets(5, 5, 5, 5);
 		
-		addComp("usernameLabel", new JLabel("Benutzername"));
+		addComp("emailLabel", new JLabel("Email"));
 		
-		add(get("usernameLabel"), c);
+		add(get("emailLabel"), c);
 		c.gridx = 1;
 		
-		addComp("usernameInput", new JTextField(40));
-		add(get("usernameInput"), c);
+		addComp("emailInput", new JTextField(40));
+		add(get("emailInput"), c);
 		c.gridy++;
 		c.gridx = 0;
 		
@@ -108,7 +108,7 @@ public class LoginTab extends CoolTab {
 
 	@Override
 	protected void unloadDynamicContent() {
-		get("usernameInput", JTextField.class).setText("");
+		get("emailInput", JTextField.class).setText("");
 		get("passwordInput", JPasswordField.class).setText("");
 	}
 	

@@ -2,23 +2,22 @@ package ch.bzz.controller;
 
 import javax.swing.JOptionPane;
 
+import ch.bzz.beans.Benutzer;
 import ch.bzz.beans.Kunde;
 import ch.bzz.beans.Mitarbeiter;
-import ch.bzz.beans.User;
-import ch.bzz.dao.UserDAO;
-import ch.bzz.gui.MainGui;
+import ch.bzz.dao.BenutzerDAO;
 
 public class LoginController {
 	
-	private User user;
+	private Benutzer user;
 	
 	public LoginController() {
 		
 	}
 
-	public boolean login(String username, String password) {
+	public boolean login(String email, String password) {
 		try {
-			User loggedIn = UserDAO.getUserByLogin(username, password);
+			Benutzer loggedIn = BenutzerDAO.getBenutzerByLogin(email, password);
 			if(loggedIn != null) {
 				this.user = loggedIn;
 				if(loggedIn instanceof Kunde) {
@@ -43,11 +42,11 @@ public class LoginController {
 		return false;
 	}
 
-	public User getUser() {
+	public Benutzer getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(Benutzer user) {
 		this.user = user;
 	}
 	

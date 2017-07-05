@@ -6,30 +6,18 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
-@PrimaryKeyJoinColumn(name="KID", referencedColumnName="U_ID")
+@PrimaryKeyJoinColumn(name="K_ID", referencedColumnName="BE_ID")
 @Table(name="Kunde")
-public class Kunde extends User {
+public class Kunde extends Benutzer {
 
-	@Column(name = "KVorname")
-	private String vorname;
-	
-	@Column(name = "KName")
-	private String nachname;
-	
-	@Column(name = "KAdresse")
+	@Column(name = "K_Adresse")
 	private String adresse;
 	
-	@Column(name = "KPLZ")
+	@Column(name = "K_PLZ")
 	private int plz;
 	
-	@Column(name = "KOrt")
+	@Column(name = "K_Ort")
 	private String ort;
-	
-	@Column(name = "KEmailAdresse")
-	private String email;
-	
-	@Column(name = "KPWD")
-	private String pwd;
 	
 	public Kunde() {
 	}
@@ -37,22 +25,6 @@ public class Kunde extends User {
 	@Override
 	public String toString() {
 		return getVorname() + " " + getNachname() + " " + getAdresse();
-	}
-
-	public String getVorname() {
-		return vorname;
-	}
-
-	public void setVorname(String vorname) {
-		this.vorname = vorname;
-	}
-
-	public String getNachname() {
-		return nachname;
-	}
-
-	public void setNachname(String nachname) {
-		this.nachname = nachname;
 	}
 
 	public String getAdresse() {
@@ -79,20 +51,4 @@ public class Kunde extends User {
 		this.ort = ort;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPwd() {
-		return pwd;
-	}
-
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
-	}
-	
 }

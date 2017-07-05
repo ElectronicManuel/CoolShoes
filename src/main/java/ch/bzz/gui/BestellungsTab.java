@@ -82,9 +82,9 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 		c.anchor = GridBagConstraints.NORTH;
 		details.add(new JLabel("Bestellstatus"), c);
 		c.gridx = 1;
-		JComboBox statusAuswahl = new JComboBox<>();
+		JComboBox<Object> statusAuswahl = new JComboBox<>();
 		statusAuswahl.setPreferredSize(new Dimension(325, 20));
-		statusAuswahl.setModel(new DefaultComboBoxModel(allStatus.toArray()));
+		statusAuswahl.setModel(new DefaultComboBoxModel<Object>(allStatus.toArray()));
 		addComp("statusInput", statusAuswahl);
 		get("statusInput").setEnabled(false);
 		details.add(get("statusInput"), c);
@@ -167,8 +167,8 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 		if(current != null) {
 			get("kundeInput", JTextField.class).setText(current.getKunde().getEmail());
 			get("mitarbeiterInput", JTextField.class).setText(current.getMitarbeiter().getVorname() + " " + current.getMitarbeiter().getNachname());
-			get("statusInput", JComboBox.class).setSelectedItem(current.getBestellStatus().getStatus());
-			get("vermerkInput", JTextArea.class).setText(current.getBestellStatus().getVermerk());
+			get("statusInput", JComboBox.class).setSelectedItem(current.getCurrentBestellStatus().getStatus());
+			get("vermerkInput", JTextArea.class).setText(current.getVermerk());
 		} else {
 			get("kundeInput", JTextField.class).setText("");
 			get("mitarbeiterInput", JTextField.class).setText("");
@@ -188,9 +188,16 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 				new Thread(new Runnable() {				
 					public void run() {
 						try {
-							((Bestellung)get("orderList", JList.class).getSelectedValue()).getBestellStatus().setStatus(get("statusInput", JComboBox.class).getSelectedItem().toString());
-							((Bestellung)get("orderList", JList.class).getSelectedValue()).getBestellStatus().setVermerk(get("vermerkInput", JTextArea.class).getText().toString());
-							BestellungsDAO.save(((Bestellung)get("orderList", JList.class).getSelectedValue()));
+							Bestellung toSave = (Bestellung)get("orderList", JList.class).getSelectedValue();
+							
+							String status = get("statusInput", JComboBox.class).getSelectedItem().toString();
+							String vermerk = get("vermerkInput", JTextArea.class).getText().toString();
+							BestellungsDAO.setBestellStatus(toSave, status);
+							
+							toSave.setVermerk(vermerk);
+							
+							BestellungsDAO.save(toSave);
+							
 							MainController.getInstance().popup("Gespeichert", "Änderungen wurden erfolgreich gespeichert", JOptionPane.INFORMATION_MESSAGE);
 						} catch(Exception ex) {
 							MainController.getInstance().error("Ein Fehler ist aufgetreten");
