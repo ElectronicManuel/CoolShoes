@@ -5,9 +5,9 @@
 <hibernate-configuration>
 	<session-factory>
 
-		<property name="connection.url">jdbc:mysql://localhost:3306/coolshoes</property><!-- jdbc:mysql://johnny.heliohost.org:3306/emanuels_coolshoes -->
-		<property name="connection.username">root</property><!-- emanuels_app -->
-		<property name="connection.password">root</property><!-- abcdefg -->
+		<property name="connection.url">jdbc:mysql://johnny.heliohost.org:3306/emanuels_coolshoes</property><!-- jdbc:mysql://johnny.heliohost.org:3306/emanuels_coolshoes --> <!-- jdbc:mysql://localhost:3306/coolshoes -->
+		<property name="connection.username">emanuels_schuh</property><!-- emanuels_emanuel --> <!--root  -->
+		<property name="connection.password">abcdefg</property><!-- abcdefg --> <!-- root -->
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
 		<property name="hibernate.connection.autocommit">false</property>
 

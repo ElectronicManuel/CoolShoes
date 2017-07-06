@@ -40,6 +40,10 @@ public class MainDAO {
 			toThrow = ex;
 		}
 		finally {
+			if(session.isDirty()) {
+				session.flush();
+				session.clear();
+			}
 			session.close();
 		}
 		
