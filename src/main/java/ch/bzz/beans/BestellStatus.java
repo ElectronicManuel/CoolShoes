@@ -13,6 +13,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+
+/**
+ * Diese Klasse enthält den Bestellstatus, welcher nur den Status als String und das Bearbeitungsdatum speichert.
+ * @author Emanuel
+ * @version 0.0.1-SNAPSHOT
+ * Datum: 04.07.2017
+ */
+
 @Entity
 @Table(name = "BestellStatus")
 public class BestellStatus implements Comparable<BestellStatus> {
@@ -39,34 +47,59 @@ public class BestellStatus implements Comparable<BestellStatus> {
 		this.status = status;
 	}
 
+
+	/**
+	 * @return the id
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * @param id the id to set
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return the bestellung
+	 */
 	public Bestellung getBestellung() {
 		return bestellung;
 	}
 
+	/**
+	 * @param bestellung the bestellung to set
+	 */
 	public void setBestellung(Bestellung bestellung) {
 		this.bestellung = bestellung;
 	}
 
+	/**
+	 * @return the status
+	 */
 	public String getStatus() {
 		return status;
 	}
 
+	/**
+	 * @param status the status to set
+	 */
 	public void setStatus(String status) {
 		this.status = status;
 	}
 
+	/**
+	 * @return the gesetzt
+	 */
 	public Date getGesetzt() {
 		return gesetzt;
 	}
 
+	/**
+	 * @param gesetzt the gesetzt to set
+	 */
 	public void setGesetzt(Date gesetzt) {
 		this.gesetzt = gesetzt;
 	}
@@ -74,7 +107,7 @@ public class BestellStatus implements Comparable<BestellStatus> {
 	@Override
 	public int compareTo(BestellStatus o) {
 		if(getGesetzt() == null || o.getGesetzt() == null) return 0;
-		return getGesetzt().compareTo(o.getGesetzt());
+		return o.getGesetzt().compareTo(getGesetzt());
 	}
 
 

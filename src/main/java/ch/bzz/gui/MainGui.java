@@ -12,6 +12,12 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+/**
+ * Dies ist das JFrame welches auf dem Bildschirm angezeigt wird, es enthält ein JTabbgedPane welches wiederum die verschieden Tabs (Login oder Bestellen) enthält
+ * @author Emanuel
+ * @version 0.0.1-SNAPSHOT
+ * Datum: 04.07.2017
+ */
 public class MainGui extends JFrame {
 	
 	private JTabbedPane tabs;
@@ -31,6 +37,9 @@ public class MainGui extends JFrame {
 		activateTab("Login");
 	}
 
+	/**
+	 * Setzt allgemeine Einstellungen
+	 */
 	private void initSettings() {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		try {
@@ -41,6 +50,9 @@ public class MainGui extends JFrame {
 		setTitle("CoolShoes Bestellstatus");
 	}
 	
+	/*
+	 * Initialisiert die Komponenten
+	 */
 	private void initComponents() {
 		currentTabs = new ArrayList<String>();
 		tabList = new HashMap<String, CoolTab>();
@@ -61,6 +73,9 @@ public class MainGui extends JFrame {
 		add(tabs);
 	}
 	
+	/**
+	 * Berechnet die mindestgrösse des GUI und lässt eine verkleinerung kleiner als diese grösse nicht zu, wird nach jeder Änderung des Inhaltes aufgerufen
+	 */
 	public void recalculateSize() {
 		Dimension size = getMinimumSize();
 		setMinimumSize(new Dimension(0, 0));
@@ -71,11 +86,20 @@ public class MainGui extends JFrame {
 		setMinimumSize(getSize());
 	}
 	
+	/**
+	 * Fügt einen Tab der Tabliste hinzu
+	 * @param name
+	 * @param tab
+	 */
 	public void addTab(String name, CoolTab tab) {
 		tabList.put(name, tab);
 		tab.initBaseComponents();
 	}
 	
+	/**
+	 * Aktiviert einen Tab (hebt diesen in den Vordergrund, fügt ihn der JTabbedPane hinzu)
+	 * @param name
+	 */
 	public void activateTab(String name) {
 		if(tabList.containsKey(name)) {
 			if(!currentTabs.contains(name)) {
@@ -98,6 +122,10 @@ public class MainGui extends JFrame {
 		}
 	}
 	
+	/**
+	 * Deaktiviert einen Tab (schiebt ihn in den Hintergrund, löscht ihn aus der JTabbedPane)
+	 * @param name
+	 */
 	public void deactivateTab(String name) {
 		if(tabList.containsKey(name)) {
 			if(currentTabs.contains(name)) {
@@ -116,7 +144,11 @@ public class MainGui extends JFrame {
 		}
 	}
 	
-	public void removeTabWithTitle(String tabTitleToRemove) {
+	/**
+	 * Löscht einen Tab mit einem bestimmten Titel aus der JTabbedPane
+	 * @param tabTitleToRemove
+	 */
+	private void removeTabWithTitle(String tabTitleToRemove) {
 	    for (int i = 0; i < tabs.getTabCount(); i++) {
 	        String tabTitle = tabs.getTitleAt(i);
 	        if (tabTitle.equals(tabTitleToRemove)) {
@@ -126,6 +158,14 @@ public class MainGui extends JFrame {
 	    }
 	}
 	
+	/**
+	 * Diese Methode erleichtert den Zugriff auf Tabs, denn sie gibt den Tab bereits gecastet zurück
+	 * 
+	 * @param name
+	 * @param clazz Typ des Tabs
+	 * @return Tab zu dem Typ gecastet
+	 * @throws ClassCastException wenn der Tab nicht gecastet werden kann
+	 */
 	public <T extends CoolTab> T getTab(String name, Class<T> clazz) {
 		return clazz.cast(tabList.get(name));
 	}

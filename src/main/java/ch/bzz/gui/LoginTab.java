@@ -15,49 +15,72 @@ import javax.swing.JTextField;
 
 import ch.bzz.controller.MainController;
 
-public class LoginTab extends CoolTab {
+/**
+ * Dies ist der Logintab in dem sich der Benutzer anmelden kann
+ * @author Emanuel
+ * @version 0.0.1-SNAPSHOT
+ * Datum: 04.07.2017
+ */
+public class LoginTab extends CoolTab implements ActionListener {
 	
+	/**
+	 * Initialisiert dem ActionListener für den Loginbutton
+	 */
 	private void initListeners() {
-		get("loginButton", JButton.class).addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				final String email = get("emailInput", JTextField.class).getText();
-				final String pw = String.valueOf(get("passwordInput", JPasswordField.class).getPassword());
-				
-				new Thread(new Runnable() {
-					
-					public void run() {
-						MainController.getInstance().getLoginCtrl().login(email, pw);
-						load(false);
-						get("loginButton").setEnabled(true);
-						
-						MainController.getInstance().getMainGui().recalculateSize();
-					}
-				}).start();
-				
-				get("loginButton").setEnabled(false);
-				load(true);
-				MainController.getInstance().getMainGui().recalculateSize();
-			}
-			
-		});
+		get("loginButton", JButton.class).addActionListener(this);
 	}
 	
+	/**
+	 * Actionlistener des Login Knopfes
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		final String email = get("emailInput", JTextField.class).getText();
+		final String pw = String.valueOf(get("passwordInput", JPasswordField.class).getPassword());
+
+		new Thread(new Runnable() {
+
+			public void run() {
+				MainController.getInstance().getLoginCtrl().login(email, pw);
+				load(false);
+				get("loginButton").setEnabled(true);
+
+				MainController.getInstance().getMainGui().recalculateSize();
+			}
+		}).start();
+
+		get("loginButton").setEnabled(false);
+		load(true);
+		MainController.getInstance().getMainGui().recalculateSize();
+	}
+	
+	/**
+	 * Zeigt / versteckt den Preloader
+	 */
 	public void load(boolean toLoad) {
 		get("loading").setVisible(toLoad);
 		MainController.getInstance().getMainGui().recalculateSize();
 	}
 
+	/**
+	 * Siehe Cooltab
+	 */
 	@Override
 	public JButton getDefaultButton() {
 		return get("loginButton", JButton.class);
 	}
 
+	/**
+	 * Siehe Cooltab
+	 */
 	@Override
 	public JComponent getDefaultFocus() {
-		return get("usernameInput");
+		return get("emailInput");
 	}
 
+	/**
+	 * Siehe Cooltab
+	 */
 	@Override
 	protected void initBaseComponents() {
 		setLayout(new GridBagLayout());
@@ -101,15 +124,21 @@ public class LoginTab extends CoolTab {
 		initListeners();
 	}
 
+	/**
+	 * Siehe Cooltab
+	 */
 	@Override
 	protected void loadDynamicContent() {
 		get("loading", JProgressBar.class).setVisible(false);
 	}
 
+	/**
+	 * Siehe Cooltab
+	 */
 	@Override
 	protected void unloadDynamicContent() {
 		get("emailInput", JTextField.class).setText("");
 		get("passwordInput", JPasswordField.class).setText("");
 	}
-	
+
 }

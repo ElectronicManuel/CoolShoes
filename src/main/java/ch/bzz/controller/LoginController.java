@@ -7,6 +7,12 @@ import ch.bzz.beans.Kunde;
 import ch.bzz.beans.Mitarbeiter;
 import ch.bzz.dao.BenutzerDAO;
 
+/**
+ * Diese Klasse ist für alles zuständig was mit dem Anmelden zu tun hat
+ * @author Emanuel
+ * @version 0.0.1-SNAPSHOT
+ * Datum: 04.07.2017
+ */
 public class LoginController {
 	
 	private Benutzer user;
@@ -15,6 +21,13 @@ public class LoginController {
 		
 	}
 
+	/**
+	 * Sucht einen Benutzer mit passender email und passwort, falls vorhanden wird diese in dem Attribut 'user' gespeichert und im gui auf den bestellungstab gewechselt
+	 * 
+	 * @param email
+	 * @param password
+	 * @return true wenn benutzer gefunden, false wenn nicht
+	 */
 	public boolean login(String email, String password) {
 		try {
 			Benutzer loggedIn = BenutzerDAO.getBenutzerByLogin(email, password);
@@ -42,12 +55,19 @@ public class LoginController {
 		return false;
 	}
 
+	/**
+	 * @return the user
+	 */
 	public Benutzer getUser() {
 		return user;
 	}
 
+	/**
+	 * @param user the user to set
+	 */
 	public void setUser(Benutzer user) {
 		this.user = user;
 	}
+
 	
 }

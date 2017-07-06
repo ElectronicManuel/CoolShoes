@@ -15,8 +15,22 @@ import ch.bzz.beans.Mitarbeiter;
 import ch.bzz.database.DBAction;
 import ch.bzz.database.MainDAO;
 
+/**
+ * Diese Klasse enthält Methoden um Bestellungen und Bestellstati in die Datenbank zu schreiben / auszulesen
+ * Alle Methoden in dieser Klasse sind statisch da keine Instanz benötigt wird
+ * @author Emanuel
+ * @version 0.0.1-SNAPSHOT
+ * Datum: 04.07.2017
+ */
 public class BestellungsDAO {
 	
+	/**
+	 * Überprüft ob der Benutzer Mitarbeiter ist und gibt alle Bestellungen, oder nur die des Kunden falls der Benutzer ein Kunde ist, zurück
+	 * 
+	 * @param user Der zu prüfende Benutzer
+	 * @return Die Liste aller Bestellungen, falls keine Bestellungen vorhanden ist dies eine leere Liste
+	 * @throws Exception - Falls ein Datenbankfehler auftrat
+	 */
 	public static List<Bestellung> getBestellungenByUser(final Benutzer user) throws Exception {
 		List<Bestellung> bestellungen = MainDAO.<List<Bestellung>>executeAction(new DBAction<List<Bestellung>>() {
 			
@@ -27,7 +41,7 @@ public class BestellungsDAO {
 				if(user instanceof Mitarbeiter) {
 					hql = "From Bestellung";
 				} else if(user instanceof Kunde) {
-					hql = "From Bestellung where kunde.benuzerId=" + user.getBenutzerId();
+					hql = "From Bestellung where kunde.benutzerId=" + user.getBenutzerId();
 				}
 				
 				@SuppressWarnings("unchecked")
@@ -43,6 +57,13 @@ public class BestellungsDAO {
 		return bestellungen;
 	}
 	
+	/**
+	 * Setzt den Bestellstatus einer Bestellung, falls dieser schon einmal gesetzt wurde wird bei dem bereits existierenden Status das Bearbeitungsdatum auf now geändert, ansonsten wird ein neuer erstellt
+	 * 
+	 * @param bestellung
+	 * @param bestellStatus
+	 * @throws Exception - Falls ein Datenbankfehler auftrat
+	 */
 	public static void setBestellStatus(final Bestellung bestellung, final String bestellStatus) throws Exception {
 		MainDAO.executeAction(new DBAction<Object>() {
 
@@ -58,6 +79,7 @@ public class BestellungsDAO {
 				
 				status.setStatus(bestellStatus);
 				status.setGesetzt(new Date());
+				status.setBestellung(bestellung);
 				
 				s.saveOrUpdate(status);
 				
@@ -67,6 +89,12 @@ public class BestellungsDAO {
 		});
 	}
 	
+	/**
+	 * Speichert eine Bestellung in der Datenbank
+	 * 
+	 * @param bestellung
+	 * @throws Exception - Falls ein Datenbankfehler auftrat
+	 */
 	public static void save(final Bestellung bestellung) throws Exception {
 		MainDAO.executeAction(new DBAction<Object>() {
 			

@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.ToolTipManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -30,10 +31,21 @@ import ch.bzz.controller.MainController;
 import ch.bzz.dao.BestellungsDAO;
 import ch.bzz.util.GUIUtil;
 
+/**
+ * Dieser Tab wird verwendet um Bestellungen einzusehen oder zu bearbeiten
+ * @author Emanuel
+ * @version 0.0.1-SNAPSHOT
+ * Datum: 04.07.2017
+ */
 public class BestellungsTab extends CoolTab implements ListSelectionListener, ActionListener {
 
+	/**
+	 * Siehe Cooltab
+	 */
 	@Override
 	protected void initBaseComponents() {
+		ToolTipManager.sharedInstance().setDismissDelay(1000000);
+		
 		setLayout(new BorderLayout());
 		
 		ArrayList<String> allStatus = new ArrayList<String>();
@@ -106,14 +118,14 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 		c.gridy++;
 		
 		// Speichern Knopf
-		addComp("saveButton", new JButton("�nderungen speichern"));
+		addComp("saveButton", new JButton("Änderungen speichern"));
 		get("saveButton", JButton.class).addActionListener(this);
 		details.add(get("saveButton"), c);
 		c.gridx = 0;
 		c.gridy++;
 		
 		// History Label
-		addComp("historyLabel", new JLabel("History anzeigen"));
+		addComp("historyLabel", new JLabel("<html><span style=\"color:blue;\">History anzeigen</span></html>"));
 		
 		details.add(get("historyLabel"), c);
 		c.gridx = 0;
@@ -127,7 +139,30 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 		add(GUIUtil.wrap(get("logoutButton")), BorderLayout.SOUTH);
 		
 	}
+	
+	/**
+	 * Setzt den Tooltip des History anzeigen Labels auf die Aktuelle history
+	 */
+	private void updateHistory() {
+		Bestellung bestellung = (Bestellung) get("orderList", JList.class).getSelectedValue();
+		
+		String tooltip = "<html>";
+		
+		int i = 0;
+		
+		for(BestellStatus bestellStatus : bestellung.getBestellStati()) {
+			tooltip += (i > 0 ? "<br>" : "") + bestellStatus.getStatus() + " " + " - " + bestellStatus.getGesetzt().toString();
+			i++;
+		}
+		
+		tooltip += "</html>";
+		
+		get("historyLabel", JLabel.class).setToolTipText(tooltip);
+	}
 
+	/**
+	 * Siehe Cooltab
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void loadDynamicContent() {
@@ -143,15 +178,7 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 		if(listData.length > 0) {
 			((JList<Bestellung>)get("orderList", JList.class)).setSelectedIndex(0);
 			
-			Bestellung bestellung = (Bestellung) get("orderList", JList.class).getSelectedValue();
-			ArrayList<BestellStatus> bestellHistory = (ArrayList<BestellStatus>) bestellung.getBestellStati();
-			
-			String tooltip = "";
-			
-			for(BestellStatus bestellStatus : bestellHistory){
-				tooltip = tooltip + "<html> <br> Status: " + bestellStatus.getStatus() + " " + "Gesetzt: " + bestellStatus.getGesetzt().toString()+ "</html>";
-			}
-			get("historyLabel", JLabel.class).setToolTipText(tooltip);
+			updateHistory();
 		}
 	
 		if(MainController.getInstance().getLoginCtrl().getUser() instanceof Mitarbeiter) {
@@ -164,6 +191,10 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 		updateDetails();
 	}
 
+
+	/**
+	 * Siehe Cooltab
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void unloadDynamicContent() {
@@ -173,33 +204,36 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 		get("historyLabel", JLabel.class).setToolTipText("");
 	}
 
+	/**
+	 * Siehe Cooltab
+	 */
 	@Override
 	public JButton getDefaultButton() {
 		return null;
 	}
 
+	/**
+	 * Siehe Cooltab
+	 */
 	@Override
 	public JComponent getDefaultFocus() {
 		return null;
 	}
 
+	/**
+	 * Passt die Werte innerhalb der Detaillierten Anzeige der aktuell ausgewählten Bestellung an
+	 */
 	private void updateDetails() {
 		Bestellung current = ((Bestellung)get("orderList", JList.class).getSelectedValue());
 		if(current != null) {
-			get("kundeInput", JTextField.class).setText(current.getKunde().getEmail());
+			get("kundeInput", JTextField.class).setText(current.getKunde().toString());
 			get("mitarbeiterInput", JTextField.class).setText(current.getMitarbeiter().getVorname() + " " + current.getMitarbeiter().getNachname());
-			get("statusInput", JComboBox.class).setSelectedItem(current.getCurrentBestellStatus().getStatus());
+			if(current.getCurrentBestellStatus() != null) {
+				get("statusInput", JComboBox.class).setSelectedItem(current.getCurrentBestellStatus().getStatus());
+			}
 			get("vermerkInput", JTextArea.class).setText(current.getVermerk());
 			
-			Bestellung bestellung = (Bestellung) get("orderList", JList.class).getSelectedValue();
-			ArrayList<BestellStatus> bestellHistory = (ArrayList<BestellStatus>) bestellung.getBestellStati();
-			
-			String tooltip = "";
-			
-			for(BestellStatus bestellStatus : bestellHistory){
-				tooltip = tooltip + "<html> <br> Status: " + bestellStatus.getStatus() + " " + "Gesetzt: " + bestellStatus.getGesetzt().toString()+ "</html>";
-			}
-			get("historyLabel", JLabel.class).setToolTipText(tooltip);
+			updateHistory();
 		} else {
 			get("kundeInput", JTextField.class).setText("");
 			get("mitarbeiterInput", JTextField.class).setText("");
@@ -211,9 +245,8 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 	}
 	
 	/*
-	 * Event Listeners
+	 * Action Listener für Änderungen speichern und abmelden
 	 */
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == get("saveButton")) {
@@ -231,6 +264,8 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 							
 							BestellungsDAO.save(toSave);
 							
+							updateDetails();
+							
 							MainController.getInstance().popup("Gespeichert", "Änderungen wurden erfolgreich gespeichert", JOptionPane.INFORMATION_MESSAGE);
 						} catch(Exception ex) {
 							MainController.getInstance().error("Ein Fehler ist aufgetreten");
@@ -246,6 +281,9 @@ public class BestellungsTab extends CoolTab implements ListSelectionListener, Ac
 		}
 	}
 	
+	/**
+	 * Change Listener für die Bestellungsliste
+	 */
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if(e.getSource() == get("orderList")) {
